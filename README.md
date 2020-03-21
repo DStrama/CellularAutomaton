@@ -1,4 +1,4 @@
-# Cellular Automaton
+# Cellular Automaton 
 Simple application that shows how Cellular Automaton works.
 Made as part of the classes.
 ### Requirements

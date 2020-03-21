@@ -18,7 +18,7 @@ class Automaton:
         elif rules == 225:
             self.ruleset = [1, 1, 1, 0, 0, 0, 0, 1]
 
-    def transition_rules( self, left_neighbor, cell, right_neighbor) :
+    def transition_rules( self, left_neighbor, cell, right_neighbor):
         if left_neighbor == 1 and cell == 1 and right_neighbor == 1:
             return self.ruleset[0]
         elif left_neighbor == 1 and cell == 1 and right_neighbor == 0:
@@ -40,10 +40,19 @@ class Automaton:
 
     def next_iteration(self):
         next_iteration = [0] * len(self.cells)
-        for i in range(1, len(self.cells)-1):
-            left_neighbor = self.cells[i - 1]
+        for i in range(0, len(self.cells)):
+            if i == 0:
+                left_neighbor = self.cells[len(self.cells) - 1]
+            else:
+                left_neighbor = self.cells[i - 1]
+
+            if i == len(self.cells) - 1:
+                right_neighbor = self.cells[0]
+            else:
+                right_neighbor = self.cells[i + 1]
+
             cell = self.cells[i]
-            right_neighbor = self.cells[i + 1]
+
             next_iteration[i] = self.transition_rules(left_neighbor, cell, right_neighbor)
         self.cells = next_iteration
 
@@ -51,7 +60,7 @@ class Automaton:
 class Gui(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.canvas = tk.Canvas(self, width=1500, height=1500)
+        self.canvas = tk.Canvas(self, width=1400, height=1000)
         self.canvas.pack()
 
         self.label = tk.Label(self, text="Height:")
@@ -66,12 +75,6 @@ class Gui(tk.Tk):
         self.entry_width = tk.Entry(self, width=10)
         self.entry_width.place(x=150, y=920)
 
-        # self.label = tk.Label(self, text="Condition:")
-        # self.label.place(x=290, y=900)
-        #
-        # self.combobox_condition = ttk.Combobox(self, values=["constant", "inconstant"], state="readonly")
-        # self.combobox_condition.place(x=290, y=920)
-
         self.label = tk.Label(self, text="Select Rules:")
         self.label.place(x=600, y=900)
 
@@ -83,17 +86,12 @@ class Gui(tk.Tk):
 
 
     def on_button_click(self):
-        # self.entry_height.get()
-        # self.entry_width.get()
-        # self.combobox_condition.get()
-        # self.combobox_rules.get()
 
         ob = Automaton(int(self.combobox_rules.get()), int(self.entry_width.get()), int(self.entry_height.get()))
         for i in range(int(self.entry_height.get())):
             ob.grid_values[i] = ob.cells
             ob.next_iteration()
-            if i == int(self.entry_height.get()) -1:
-                print(ob.cells)
+
         self.printing(ob.grid_values)
 
 
